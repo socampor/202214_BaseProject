@@ -1,0 +1,708 @@
+{
+	"info": {
+		"_postman_id": "248105e3-04c8-46e6-8e52-78fbbc9f4852",
+		"name": "Clubs-Members",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23021778"
+	},
+	"item": [
+		{
+			"name": "Add a member to a club",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = pm.response.json();\r",
+							"pm.collectionVariables.set(\"club_id\", data.id);\r",
+							"pm.collectionVariables.set(\"member_id\", data.members[0].id);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"   pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{member_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"clubs",
+						"{{club_id}}",
+						"members",
+						"{{member_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Add a member to a club",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{member_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clubs",
+								"{{club_id}}",
+								"members",
+								"{{member_id}}"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"id\": \"48a9ab90-1276-11ed-861d-0242ac120002\",\r\n    \"name\": \"Antisocial social club\",\r\n    \"foundationDate\": \"2008-06-22\",\r\n    \"image\": \"https://www.si.edu/sites/default/files/newsdesk/fact_sheets/nhb2015-02891.jpg\",\r\n    \"description\": \"The world's most popular club\",\r\n    \"members\": [\r\n        {\r\n            \"id\": \"70g5ab90-1276-11ed-861d-0242ac120002\",\r\n            \"name\": \"Member One\",\r\n            \"email\": \"test@test.com\",\r\n            \"birthDate\": \"1992-06-22\"\r\n        },\r\n        {\r\n            \"id\": \"78a9ab90-1276-11ed-861d-0242ac120002\",\r\n            \"name\": \"Member Two\",\r\n            \"email\": \"test2@test.com\",\r\n            \"birthDate\": \"1992-06-22\"\r\n        }\r\n    ]\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Add an invalid member to a club",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"   pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get expected error message\", function () {\r",
+							"   var data = pm.response.json();\r",
+							"   pm.expect(data.message).to.eql(\"The member with the given id was not found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{default_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"clubs",
+						"{{club_id}}",
+						"members",
+						"{{default_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Add an invalid member to a club",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{default_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clubs",
+								"{{club_id}}",
+								"members",
+								"{{default_id}}"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"statusCode\": 404,\r\n    \"message\": \"The member with the given id was not found\"\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Get all club members",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Number of club members > ' + 0, function () {\r",
+							"   var data = pm.response.json()\r",
+							"   pm.expect(data.length).to.greaterThan(0)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"   pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/clubs/{{club_id}}/members",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"clubs",
+						"{{club_id}}",
+						"members"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get all club members",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/clubs/{{club_id}}/members",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clubs",
+								"{{club_id}}",
+								"members"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "[\r\n   {\r\n        \"id\": \"70g5ab90-1276-11ed-861d-0242ac120002\",\r\n        \"name\": \"Member One\",\r\n        \"email\": \"test@test.com\",\r\n        \"birthDate\": \"1992-06-22\"\r\n    },\r\n    {\r\n        \"id\": \"78a9ab90-1276-11ed-861d-0242ac120002\",\r\n        \"name\": \"Member Two\",\r\n        \"email\": \"test2@test.com\",\r\n        \"birthDate\": \"1992-06-22\"\r\n    }\r\n]"
+				}
+			]
+		},
+		{
+			"name": "Get one club member",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"   pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{member_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"clubs",
+						"{{club_id}}",
+						"members",
+						"{{member_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get one club member",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{member_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clubs",
+								"{{club_id}}",
+								"members",
+								"{{member_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"id\": \"70g5ab90-1276-11ed-861d-0242ac120002\",\r\n    \"name\": \"Member One\",\r\n    \"email\": \"test@test.com\",\r\n    \"birthDate\": \"1992-06-22\"\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Get an invalid club member",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"   pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get expected error message\", function () {\r",
+							"   var data = pm.response.json();\r",
+							"   pm.expect(data.message).to.eql(\"The member with the given id was not found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{default_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"clubs",
+						"{{club_id}}",
+						"members",
+						"{{default_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get an invalid club member",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{default_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clubs",
+								"{{club_id}}",
+								"members",
+								"{{default_id}}"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"message\": \"The member with the given id was not found\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Update a club members",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"   pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"id\": \"d5430699-9ab9-4cdb-97f5-ddc11d4dfd5f\",\r\n        \"name\": \"Member One\",\r\n        \"email\": \"test@test.com\",\r\n        \"birthDate\": \"1992-06-22T04:00:00.000Z\"\r\n    },\r\n    {\r\n        \"id\": \"14d1a306-caa7-47b6-8b0e-7027234a3ea1\",\r\n        \"name\": \"Member One\",\r\n        \"email\": \"test@test.com\",\r\n        \"birthDate\": \"1992-06-22T04:00:00.000Z\"\r\n    }\r\n]"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/clubs/{{club_id}}/members",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"clubs",
+						"{{club_id}}",
+						"members"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update a club members",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"id\": \"d5430699-9ab9-4cdb-97f5-ddc11d4dfd5f\",\r\n        \"name\": \"Member One\",\r\n        \"email\": \"test@test.com\",\r\n        \"birthDate\": \"1992-06-22T04:00:00.000Z\"\r\n    },\r\n    {\r\n        \"id\": \"14d1a306-caa7-47b6-8b0e-7027234a3ea1\",\r\n        \"name\": \"Member One\",\r\n        \"email\": \"test@test.com\",\r\n        \"birthDate\": \"1992-06-22T04:00:00.000Z\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/clubs/{{club_id}}/members",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clubs",
+								"{{club_id}}",
+								"members"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"id\": \"48a9ab90-1276-11ed-861d-0242ac120002\",\n    \"name\": \"Antisocial social club\",\n    \"foundationDate\": \"2008-06-22\",\n    \"image\": \"https://www.si.edu/sites/default/files/newsdesk/fact_sheets/nhb2015-02891.jpg\",\n    \"description\": \"The world's most popular club\",\n    \"members\": [\n        {\n            \"id\": \"70g5ab90-1276-11ed-861d-0242ac120002\",\n            \"name\": \"Member One\",\n            \"email\": \"test@test.com\",\n            \"birthDate\": \"1992-06-22\"\n        },\n        {\n            \"id\": \"78a9ab90-1276-11ed-861d-0242ac120002\",\n            \"name\": \"Member Two\",\n            \"email\": \"test2@test.com\",\n            \"birthDate\": \"1992-06-22\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Update a club members with an invalid member",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"   pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get expected error message\", function () {\r",
+							"   var data = pm.response.json();\r",
+							"   pm.expect(data.message).to.eql(\"The member with the given id was not found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"id\": \"d5430699-9ab9-4cdb-97f5-ddc11d4dfd5f\",\r\n        \"name\": \"Member One\",\r\n        \"email\": \"test@test.com\",\r\n        \"birthDate\": \"1992-06-22T04:00:00.000Z\"\r\n    },\r\n    {\r\n        \"id\": \"14d1a306-caa7-47b6-8b0e-7027234a3ea1\",\r\n        \"name\": \"Member One\",\r\n        \"email\": \"test@test.com\",\r\n        \"birthDate\": \"1992-06-22T04:00:00.000Z\"\r\n    },\r\n    {\r\n        \"id\": \"FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF\",\r\n        \"name\": \"Member Three\",\r\n        \"email\": \"test3@test.com\",\r\n        \"birthDate\": \"1992-06-22\"\r\n    }\r\n]"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/clubs/{{club_id}}/members",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"clubs",
+						"{{club_id}}",
+						"members"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update a club members with an invalid member",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"id\": \"d5430699-9ab9-4cdb-97f5-ddc11d4dfd5f\",\r\n        \"name\": \"Member One\",\r\n        \"email\": \"test@test.com\",\r\n        \"birthDate\": \"1992-06-22T04:00:00.000Z\"\r\n    },\r\n    {\r\n        \"id\": \"14d1a306-caa7-47b6-8b0e-7027234a3ea1\",\r\n        \"name\": \"Member One\",\r\n        \"email\": \"test@test.com\",\r\n        \"birthDate\": \"1992-06-22T04:00:00.000Z\"\r\n    },\r\n    {\r\n        \"id\": \"FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF\",\r\n        \"name\": \"Member Three\",\r\n        \"email\": \"test3@test.com\",\r\n        \"birthDate\": \"1992-06-22\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/clubs/{{club_id}}/members",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clubs",
+								"{{club_id}}",
+								"members"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"message\": \"The member with the given id was not found\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete a club member",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"   pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{member_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"clubs",
+						"{{club_id}}",
+						"members",
+						"{{member_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete a club member",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{member_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clubs",
+								"{{club_id}}",
+								"members",
+								"{{member_id}}"
+							]
+						}
+					},
+					"status": "No Content",
+					"code": 204,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Delete an invalid club member",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"   pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get expected error message\", function () {\r",
+							"   var data = pm.response.json();\r",
+							"   pm.expect(data.message).to.eql(\"The member with the given id was not found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{default_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"clubs",
+						"{{club_id}}",
+						"members",
+						"{{default_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete an invalid club member",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/clubs/{{club_id}}/members/{{default_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"clubs",
+								"{{club_id}}",
+								"members",
+								"{{default_id}}"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"message\": \"The member with the given id was not found in club\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "club_id",
+			"value": "ff821afb-51bb-4921-9323-90483353bb8f",
+			"type": "string"
+		},
+		{
+			"key": "member_id",
+			"value": "d5430699-9ab9-4cdb-97f5-ddc11d4dfd5f",
+			"type": "string"
+		},
+		{
+			"key": "default_id",
+			"value": "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF",
+			"type": "string"
+		}
+	]
+}
